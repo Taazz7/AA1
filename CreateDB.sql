@@ -1,4 +1,9 @@
 -- Creates
+
+CREATE DATABASE AA1
+
+USE AA1
+
 CREATE TABLE USUARIOS (
     idUsuario INT PRIMARY KEY,
     nombre VARCHAR(50),
@@ -28,7 +33,7 @@ CREATE TABLE MATERIALES (
     idMaterial INT PRIMARY KEY,
     nombre VARCHAR(50),
     cantidad INT,
-    disponibilidad BOOLEAN,
+    disponibilidad BIT,
     idPista INT,
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
 );
@@ -44,6 +49,7 @@ CREATE TABLE MANTENIMIENTO (
 );
 
 -- Inserts
+
 -- Usuarios
 INSERT INTO USUARIOS VALUES (1, 'Ana', 'García', '600123456', 'Calle Mayor 10', '1990-05-15');
 INSERT INTO USUARIOS VALUES (2, 'Luis', 'Martínez', '600654321', 'Av. Goya 22', '1985-11-30');
