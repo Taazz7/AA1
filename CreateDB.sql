@@ -8,7 +8,7 @@ CREATE TABLE USUARIOS (
     idUsuario INT PRIMARY KEY,
     nombre VARCHAR(50),
     apellido VARCHAR(50),
-    telefono VARCHAR(20),
+    telefono INT,
     direccion VARCHAR(100),
     fechaNac DATE
 );
@@ -33,13 +33,14 @@ CREATE TABLE PISTAS (
 CREATE TABLE MATERIALES (
     idMaterial INT PRIMARY KEY,
     nombre VARCHAR(50),
-    telefono INT,
+    cantidad INT,
     disponibilidad BIT,
     idPista INT,
+    fechaAct DATE,
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
 );
 
-CREATE TABLE MANTENIMIENTO (
+CREATE TABLE MANTENIMIENTOS (
     idMantenimiento INT PRIMARY KEY,
     nombre VARCHAR(50),
     tlfn INT,
@@ -52,8 +53,8 @@ CREATE TABLE MANTENIMIENTO (
 -- Inserts
 
 -- Usuarios
-INSERT INTO USUARIOS VALUES (1, 'Ana', 'García', '600123456', 'Calle Mayor 10', '1990-05-15');
-INSERT INTO USUARIOS VALUES (2, 'Luis', 'Martínez', '600654321', 'Av. Goya 22', '1985-11-30');
+INSERT INTO USUARIOS VALUES (1, 'Ana', 'García', 600123456, 'Calle Mayor 10', '1990-05-15');
+INSERT INTO USUARIOS VALUES (2, 'Luis', 'Martínez', 600654321, 'Av. Goya 22', '1985-11-30');
 
 -- Pistas
 INSERT INTO PISTAS VALUES (1, 'Pista Central', 'Tenis', 'Pista de tierra batida', 25.00);
@@ -68,5 +69,5 @@ INSERT INTO MATERIALES VALUES (1, 'Raquetas', 10, 1, 1);
 INSERT INTO MATERIALES VALUES (2, 'Pelotas', 30, 1, 2);
 
 -- Mantenimiento
-INSERT INTO MANTENIMIENTO VALUES (1, 'Revisión red', '152847563', '258', 1, 'mantenimiento@club.com');
-INSERT INTO MANTENIMIENTO VALUES (2, 'Cambio focos', '611259566', '364', 2, 'soporte@club.com');
+INSERT INTO MANTENIMIENTOS VALUES (1, 'Revisión red', '152847563', '258', 1, 'mantenimiento@club.com');
+INSERT INTO MANTENIMIENTOS VALUES (2, 'Cambio focos', '611259566', '364', 2, 'soporte@club.com');
