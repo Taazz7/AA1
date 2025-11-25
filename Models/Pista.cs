@@ -1,6 +1,6 @@
 namespace Models;
 
-public abstract class Pista {
+public class Pista {
 
     public int IdPista  {get;set;}
     public string Tipo {get;set;} = "";
@@ -19,7 +19,17 @@ public abstract class Pista {
         PrecioHora = precioHora;
     }
 
-    public abstract void MostrarDetalles();
+    public Pista(int idPista, string tipo, string nombre, string direccion, bool activa, int precioHora) {
+        IdPista = idPista;
+        Tipo = tipo;
+        Nombre = nombre;
+        Direccion = direccion;
+        Activa = activa;
+        PrecioHora = precioHora;
+    }
+    
+
+    public void MostrarDetalles();
 
    // public abstract string MostrarDetallesGuardado();
 

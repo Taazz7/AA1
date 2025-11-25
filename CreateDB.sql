@@ -25,14 +25,15 @@ CREATE TABLE PISTAS (
     idPista INT PRIMARY KEY,
     nombre VARCHAR(50),
     tipo VARCHAR(30),
-    descripcion VARCHAR(255),
-    precio DECIMAL(10,2)
+    direccion VARCHAR(255),
+    activa BIT,
+    precioHora DECIMAL(10,2)
 );
 
 CREATE TABLE MATERIALES (
     idMaterial INT PRIMARY KEY,
     nombre VARCHAR(50),
-    cantidad INT,
+    telefono INT,
     disponibilidad BIT,
     idPista INT,
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
@@ -41,8 +42,8 @@ CREATE TABLE MATERIALES (
 CREATE TABLE MANTENIMIENTO (
     idMantenimiento INT PRIMARY KEY,
     nombre VARCHAR(50),
-    fecha DATE,
-    tipo VARCHAR(30),
+    tlfn INT,
+    cif INT,
     idPista INT,
     correo VARCHAR(100),
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
