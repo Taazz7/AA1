@@ -7,11 +7,11 @@ public class Reserva {
     public Pista IdPista  {get;set;}
     public DateTime Fecha  {get;set;}
     public int Horas  {get;set;}
-    public double Precio  {get;set;}
+    public int Precio  {get;set;}
 
     public Reserva(){}
 
-    public Reserva(Usuario idUsuario, Pista idPista, DateTime fecha, int horas, double precio) {
+    public Reserva(Usuario idUsuario, Pista idPista, DateTime fecha, int horas, int precio) {
         IdUsuario = idUsuario;
         IdPista = idPista;
         Fecha = fecha;
