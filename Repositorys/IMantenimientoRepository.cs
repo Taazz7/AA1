@@ -9,5 +9,6 @@ namespace AA1.Repositories
         Task AddAsync(Mantenimiento mantenimiento);
         Task UpdateAsync(Mantenimiento mantenimiento);
         Task DeleteAsync(int id);
+        Task InicializarDatosAsync();
     }
 }

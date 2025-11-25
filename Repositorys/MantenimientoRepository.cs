@@ -10,11 +10,11 @@ namespace AA1.Repositories
         private readonly int _idMantenimiento;
         private readonly string _nombre;
         private readonly int _tlfno;
-        private readonly IPista _idPista;
+        private readonly IPistaRepository _idPista;
         private readonly int _cif;
         private readonly string _correo;
 
-        public MantenimientoRepository(IConfiguration configuration, int idMantenimiento, string nombre, int tlfno, Pista idPista, int cif, string correo)
+        public MantenimientoRepository(IConfiguration configuration, int idMantenimiento, string nombre, int tlfno, IPistaRepository idPista, int cif, string correo)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
             _idMantenimiento = idMantenimiento;
@@ -144,6 +144,44 @@ namespace AA1.Repositories
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
+        public async Task InicializarDatosAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                // Comando SQL para insertar datos iniciales
+                var query = @"
+                    INSERT INTO Mantenimiento (idMantenimiento, nombre, tlfno, cif, idPista, correo)
+                    VALUES 
+                    (@idMantenimiento1, @nombre1, @tlfno1, @cif1, @idPista1, @correo1),
+                    (@idMantenimiento2, @nombre2, @tlfno2, @cif2, @idPista2, @correo2)";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Parámetros para el primer bebida
+                    command.Parameters.AddWithValue("@idMantenimiento1", 1);
+                    command.Parameters.AddWithValue("@nombre1", "Revisión red");
+                    command.Parameters.AddWithValue("@tlfno1", 152847563);
+                    command.Parameters.AddWithValue("@cif1", 258);
+                    command.Parameters.AddWithValue("@idPista1", 1);
+                    command.Parameters.AddWithValue("@correo1", "mantenimiento@club.com");
+                    
+
+                    // Parámetros para el segundo bebida
+                    command.Parameters.AddWithValue("@idMantenimiento2", 2);
+                    command.Parameters.AddWithValue("@nombre2", "Cambio focos");
+                    command.Parameters.AddWithValue("@tlfno2", 611259566);
+                    command.Parameters.AddWithValue("@cif2", 364);
+                    command.Parameters.AddWithValue("@idPista2", 2);
+                    command.Parameters.AddWithValue("@correo2", "soporte@club.com");
 
                     await command.ExecuteNonQueryAsync();
                 }
