@@ -68,5 +68,5 @@ INSERT INTO MATERIALES VALUES (1, 'Raquetas', 10, 1, 1);
 INSERT INTO MATERIALES VALUES (2, 'Pelotas', 30, 1, 2);
 
 -- Mantenimiento
-INSERT INTO MANTENIMIENTO VALUES (1, 'Revisión red', '2025-11-18', 'Preventivo', 1, 'mantenimiento@club.com');
-INSERT INTO MANTENIMIENTO VALUES (2, 'Cambio focos', '2025-11-19', 'Correctivo', 2, 'soporte@club.com');
+INSERT INTO MANTENIMIENTO VALUES (1, 'Revisión red', '152847563', '258', 1, 'mantenimiento@club.com');
+INSERT INTO MANTENIMIENTO VALUES (2, 'Cambio focos', '611259566', '364', 2, 'soporte@club.com');
