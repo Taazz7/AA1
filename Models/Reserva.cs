@@ -1,6 +1,6 @@
 namespace Models;
 
-public abstract class Reserva {
+public class Reserva {
 
     public int IdReserva  {get;set;}
     public Usuario IdUsuario {get;set;}
@@ -19,8 +19,7 @@ public abstract class Reserva {
         Precio = precio;
     }
 
-    public abstract void MostrarDetalles();
+    public void MostrarDetalles();
 
-   // public abstract string MostrarDetallesGuardado();
 
 }

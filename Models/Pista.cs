@@ -31,6 +31,5 @@ public class Pista {
 
     public void MostrarDetalles();
 
-   // public abstract string MostrarDetallesGuardado();
 
 }

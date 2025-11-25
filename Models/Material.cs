@@ -1,6 +1,6 @@
 namespace Models;
 
-public abstract class Material {
+public class Material {
 
     public int IdMaterial  {get;set;}
     public Pista IdPista {get;set;}
@@ -19,8 +19,7 @@ public abstract class Material {
         FechaActu = fechaActu;
     }
 
-    public abstract void MostrarDetalles();
+    public void MostrarDetalles();
 
-   // public abstract string MostrarDetallesGuardado();
 
 }
