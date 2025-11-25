@@ -34,7 +34,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM Mantenimiento";
+                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM MANTENIMIENTOS";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -67,7 +67,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM Mantenimiento WHERE Id = @Id";
+                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM MANTENIMIENTOS WHERE Id = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -98,7 +98,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Mantenimiento (idMantenimiento, nombre, tlfno, cif, idPista, correo) VALUES (@idMantenimiento, @nombre, @fecha, @tipo, @idPista, @correo)";
+                string query = "INSERT INTO MANTENIMIENTOS (idMantenimiento, nombre, tlfno, cif, idPista, correo) VALUES (@idMantenimiento, @nombre, @fecha, @tipo, @idPista, @correo)";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@idMantenimiento", mantenimiento.IdMantenimiento);
@@ -119,7 +119,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE Mantenimiento SET idMantenimiento = @idMantenimiento, nombre = @nombre, tlfno = @tlfno, cif = @cif, idPista =@idPista, correo = @correo WHERE Id = @Id";
+                string query = "UPDATE MANTENIMIENTOS SET idMantenimiento = @idMantenimiento, nombre = @nombre, tlfno = @tlfno, cif = @cif, idPista =@idPista, correo = @correo WHERE Id = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@idMantenimiento", mantenimiento.IdMantenimiento);
@@ -140,7 +140,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM Mantenimiento WHERE Id = @Id";
+                string query = "DELETE FROM MANTENIMIENTOS WHERE Id = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
