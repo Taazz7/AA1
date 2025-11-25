@@ -41,8 +41,8 @@ CREATE TABLE MATERIALES (
 CREATE TABLE MANTENIMIENTO (
     idMantenimiento INT PRIMARY KEY,
     nombre VARCHAR(50),
-    fecha DATE,
-    tipo VARCHAR(30),
+    tlfn INT,
+    cif INT,
     idPista INT,
     correo VARCHAR(100),
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
