@@ -6,7 +6,7 @@ public class Material {
     public Pista IdPista {get;set;}
     public string Nombre  {get;set;} ="";
     public int Cantidad  {get;set;}
-    public bool Disponibilidad  {get;set;}
+    public int Disponibilidad  {get;set;}
     public DateTime FechaActu  {get;set;}
 
     public Material(){}

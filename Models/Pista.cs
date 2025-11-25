@@ -19,16 +19,6 @@ public class Pista {
         PrecioHora = precioHora;
     }
 
-    public Pista(int idPista, string tipo, string nombre, string direccion, bool activa, int precioHora) {
-        IdPista = idPista;
-        Tipo = tipo;
-        Nombre = nombre;
-        Direccion = direccion;
-        Activa = activa;
-        PrecioHora = precioHora;
-    }
-    
-
     public void MostrarDetalles();
 
 
