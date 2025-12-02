@@ -11,15 +11,12 @@ public class Material {
 
     public Material(){}
 
-    public Material(Pista idPista, string nombre, int cantidad, bool disponibilidad, DateTime fechaActu) {
+    public Material(Pista idPista, string nombre, int cantidad, int disponibilidad, DateTime fechaActu) {
         IdPista = idPista;
         Nombre = nombre;
         Cantidad = cantidad;
         Disponibilidad = disponibilidad;
         FechaActu = fechaActu;
     }
-
-    public void MostrarDetalles();
-
 
 }
