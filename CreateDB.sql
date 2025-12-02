@@ -13,17 +13,6 @@ CREATE TABLE USUARIOS (
     fechaNac DATE
 );
 
-CREATE TABLE RESERVAS (
-    idReserva INT PRIMARY KEY,
-    idUsuario INT,
-    idPista INT,
-    fecha DATE,
-    horas int,
-    precio int,
-    FOREIGN KEY (idUsuario) REFERENCES USUARIOS(idUsuario)
-    FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
-);
-
 CREATE TABLE PISTAS (
     idPista INT PRIMARY KEY,
     nombre VARCHAR(50),
@@ -31,6 +20,17 @@ CREATE TABLE PISTAS (
     direccion VARCHAR(255),
     activa BIT,
     precioHora DECIMAL(10,2)
+);
+
+CREATE TABLE RESERVAS (
+    idReserva INT PRIMARY KEY,
+    idUsuario INT,
+    idPista INT,
+    fecha DATE,
+    horas int,
+    precio int,
+    FOREIGN KEY (idUsuario) REFERENCES USUARIOS(idUsuario),
+    FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
 );
 
 CREATE TABLE MATERIALES (
@@ -60,16 +60,16 @@ INSERT INTO USUARIOS VALUES (1, 'Ana', 'García', 600123456, 'Calle Mayor 10', '
 INSERT INTO USUARIOS VALUES (2, 'Luis', 'Martínez', 600654321, 'Av. Goya 22', '1985-11-30');
 
 -- Pistas
-INSERT INTO PISTAS VALUES (1, 'Pista Central', 'Tenis', 'Pista de tierra batida', 25.00);
-INSERT INTO PISTAS VALUES (2, 'Pista Norte', 'Padel', 'Pista cubierta', 20.00);
+INSERT INTO PISTAS VALUES (1, 'Pista Central', 'Tenis', 'Pista de tierra batida', 1, 25.00);
+INSERT INTO PISTAS VALUES (2, 'Pista Norte', 'Padel', 'Pista cubierta', 1, 20.00);
 
 -- Reservas
 INSERT INTO RESERVAS VALUES (1, 2, 1, '2025-11-20', 1, 20);
 INSERT INTO RESERVAS VALUES (2, 1, 2, '2025-11-21', 3, 28);
 
 -- Materiales
-INSERT INTO MATERIALES VALUES (1, 'Raquetas', 10, 1, 1);
-INSERT INTO MATERIALES VALUES (2, 'Pelotas', 30, 1, 2);
+INSERT INTO MATERIALES VALUES (1, 'Raquetas', 10, 1, 1, '2025-1-20');
+INSERT INTO MATERIALES VALUES (2, 'Pelotas', 30, 1, 2, '2023-5-5');
 
 -- Mantenimiento
 INSERT INTO MANTENIMIENTOS VALUES (1, 'Revisión red', '152847563', '258', 1, 'mantenimiento@club.com');
