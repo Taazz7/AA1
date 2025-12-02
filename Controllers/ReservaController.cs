@@ -76,5 +76,9 @@ namespace AA1.Controllers
            return NoContent();
        }
 
+    //endpoint usuarios || necesito hacer un endpoint para que en reserva el usuario solo pueda ver sus reservas (/usuarios/{id}/reservas)
+
+
+
    }
 }

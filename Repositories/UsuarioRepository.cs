@@ -47,7 +47,7 @@ namespace AA1.Repositories
             return usuarios;
         }
 
-        public async Task<Usuario> GetByIdAsync(int id)
+        public async Task<Usuario> GetByIdAsync(int idUsuario)
         {
             Usuario usuario = null;
 
@@ -55,10 +55,10 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idUsuario, nombre, apellido, telefono, direccion, fechaNac FROM USUARIOS WHERE Id = @Id";
+                string query = "SELECT idUsuario, nombre, apellido, telefono, direccion, fechaNac FROM USUARIOS WHERE IdUsuario = @IdUsuario";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -122,16 +122,16 @@ namespace AA1.Repositories
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int idUsuario)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM USUARIOS WHERE Id = @Id";
+                string query = "DELETE FROM USUARIOS WHERE IdUsuario = @IdUsuario";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     await command.ExecuteNonQueryAsync();
                 }

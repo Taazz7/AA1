@@ -100,6 +100,8 @@ namespace AA1.Repositories
             }
         }
 
+
+
         public async Task UpdateAsync(Pista pista)
         {
             using (var connection = new SqlConnection(_connectionString))

@@ -103,6 +103,8 @@ namespace AA1.Repositories
             }
         }
 
+
+
         public async Task UpdateAsync(Material material)
         {
             using (var connection = new SqlConnection(_connectionString))

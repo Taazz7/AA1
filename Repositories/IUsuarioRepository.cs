@@ -8,7 +8,7 @@ namespace AA1.Repositories
         Task<Usuario?> GetByIdAsync(int id);
         Task AddAsync(Usuario usuario);
         Task UpdateAsync(Usuario usuario);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(int idUsuario);
         Task InicializarDatosAsync();
     }
 }
