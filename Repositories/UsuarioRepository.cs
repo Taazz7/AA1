@@ -7,16 +7,11 @@ namespace AA1.Repositories
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly string _connectionString;
-        private readonly int _idUsuario;
-        private readonly string _nombre;
-        private readonly string _apellido;
-        private readonly int _telefono;
-        private readonly string _direccion;
-        private readonly DateTime _fechaNac;
 
         public UsuarioRepository(IConfiguration configuration)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
+        }
         
 
         public async Task<List<Usuario>> GetAllAsync()

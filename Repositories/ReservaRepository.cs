@@ -7,12 +7,8 @@ namespace AA1.Repositories
     public class ReservaRepository : IReservaRepository
     {
         private readonly string _connectionString;
-        private readonly int _idReserva;
         private readonly IUsuarioRepository _usuariorepository;
         private readonly IPistaRepository _pistarepository;
-        private readonly DateTime _fecha;
-        private readonly int _horas;
-        private readonly int _precio;
 
         public ReservaRepository(IConfiguration configuration, IUsuarioRepository usuariorepository, IPistaRepository pistarepository)
         {

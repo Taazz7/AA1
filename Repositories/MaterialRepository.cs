@@ -6,22 +6,13 @@ namespace AA1.Repositories
     public class MaterialRepository : IMaterialRepository
     {
         private readonly string _connectionString;
-        private readonly int _idMaterial;
-        private readonly string _nombre;
-        private readonly int _cantidad;
         private readonly IPistaRepository _idPista;
-        private readonly bool _disponibilidad;
-        private readonly DateTime _fechaAct;
 
-        public MaterialRepository(IConfiguration configuration, int idMaterial, string nombre, int cantidad, IPistaRepository idPista, bool disponibilidad, DateTime fechAct)
+        public MaterialRepository(IConfiguration configuration, IPistaRepository idPista)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
-            _idMaterial = idMaterial;
-            _nombre = nombre;
-            _cantidad = cantidad;
             _idPista = idPista;
-            _disponibilidad = disponibilidad;
-            _fechaAct = fechAct;
+          
         }
         
 
