@@ -18,7 +18,4 @@ public class Usuario {
         Direccion = direccion;
         FechaNac = fechaNac;
     }
-
-    public void MostrarDetalles();
-
 }

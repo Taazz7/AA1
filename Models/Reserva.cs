@@ -18,8 +18,4 @@ public class Reserva {
         Horas = horas;
         Precio = precio;
     }
-
-    public void MostrarDetalles();
-
-
 }
