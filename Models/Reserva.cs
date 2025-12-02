@@ -18,8 +18,4 @@ public class Reserva {
         Horas = horas;
         Precio = precio;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 32c442731d5e52adb8fcc3c7034f3d99ebd62c5c
 }

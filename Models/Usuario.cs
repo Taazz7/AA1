@@ -18,8 +18,4 @@ public class Usuario {
         Direccion = direccion;
         FechaNac = fechaNac;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 32c442731d5e52adb8fcc3c7034f3d99ebd62c5c
 }
