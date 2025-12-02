@@ -1,4 +1,4 @@
-using System.Data;
+using Microsoft.Data.SqlClient;
 using Models;
 using AA1.Repositories;
 
@@ -35,7 +35,7 @@ namespace AA1.Repositories
                                 Tipo = reader.GetString(2),
                                 Direccion = reader.GetString(3),
                                 Activa = reader.GetBoolean(4),
-                                PrecioHora = reader.GetDecimal(5)
+                                PrecioHora = reader.GetInt32(5)
                             }; 
 
                             pistas.Add(pista);
@@ -70,7 +70,7 @@ namespace AA1.Repositories
                                 Tipo = reader.GetString(2),
                                 Direccion = reader.GetString(3),
                                 Activa = reader.GetBoolean(4),
-                                PrecioHora = reader.GetDecimal(5)
+                                PrecioHora = reader.GetInt32(5)
                             };
                         }
                     }

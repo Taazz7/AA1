@@ -1,4 +1,4 @@
-using System.Data;
+using Microsoft.Data.SqlClient;
 using Models;
 
 namespace AA1.Repositories
@@ -79,7 +79,7 @@ namespace AA1.Repositories
                             {
                                 IdMaterial = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
-                                Cantidad = reader.GetString(2),
+                                Cantidad = reader.GetInt32(2),
                                 Disponibilidad = reader.GetInt32(3),
                                 IdPista = await _idPista.GetByIdAsync(reader.GetInt32(4)),
                                 FechaActu = reader.GetDateTime(5)

@@ -3,8 +3,8 @@ namespace Models;
 public class Reserva {
 
     public int IdReserva  {get;set;}
-    public Usuario IdUsuario {get;set;}
-    public Pista IdPista  {get;set;}
+    public Usuario? IdUsuario {get;set;}
+    public Pista? IdPista  {get;set;}
     public DateTime Fecha  {get;set;}
     public int Horas  {get;set;}
     public int Precio  {get;set;}

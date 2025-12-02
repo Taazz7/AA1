@@ -1,5 +1,5 @@
 using Models;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace AA1.Repositories
 {

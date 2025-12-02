@@ -1,5 +1,5 @@
 
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Models;
 
 namespace AA1.Repositories
@@ -8,18 +8,18 @@ namespace AA1.Repositories
     {
         private readonly string _connectionString;
         private readonly int _idReserva;
-        private readonly int _idUsuario;
-        private readonly int _idPista;
+        private readonly IUsuarioRepository _usuariorepository;
+        private readonly IPistaRepository _pistarepository;
         private readonly DateTime _fecha;
         private readonly int _horas;
         private readonly int _precio;
 
-        public ReservaRepository(IConfiguration configuration, int idReserva, int idUsuario, int idPista, DateTime fecha, int horas, int precio)
+        public ReservaRepository(IConfiguration configuration, int idReserva, IUsuarioRepository usuariorepository, IPistaRepository pistarepository, DateTime fecha, int horas, int precio)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
             _idReserva = idReserva;
-            _idUsuario = idUsuario;
-            _idPista = idPista;
+            _usuariorepository = usuariorepository;
+            _pistarepository = pistarepository;
             _fecha = fecha;
             _horas = horas;
             _precio = precio;
@@ -44,8 +44,8 @@ namespace AA1.Repositories
                             var reserva = new Reserva
                             {
                                 IdReserva = reader.GetInt32(0),
-                                IdUsuario = reader.GetInt32(1),
-                                IdPista = reader.GetInt32(2),
+                                IdUsuario = await _usuariorepository.GetByIdAsync(reader.GetInt32(1)),
+                                IdPista = await _pistarepository.GetByIdAsync(reader.GetInt32(2)),
                                 Fecha = reader.GetDateTime(3),
                                 Horas = reader.GetInt32(4),
                                 Precio = reader.GetInt32(5)
@@ -79,8 +79,8 @@ namespace AA1.Repositories
                             reserva = new Reserva
                             {
                                 IdReserva = reader.GetInt32(0),
-                                IdUsuario = reader.GetInt32(1),
-                                IdPista = reader.GetInt32(2),
+                                IdUsuario = await _usuariorepository.GetByIdAsync(reader.GetInt32(1)),
+                                IdPista = await _pistarepository.GetByIdAsync(reader.GetInt32(2)),
                                 Fecha = reader.GetDateTime(3),
                                 Horas = reader.GetInt32(4),
                                 Precio = reader.GetInt32(5)
