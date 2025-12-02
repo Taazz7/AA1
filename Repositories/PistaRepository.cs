@@ -54,10 +54,10 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idPista, nombre, tipo, direccion, activa, precioHora  FROM PISTAS WHERE idPista = @Id";
+                string query = "SELECT idPista, nombre, tipo, direccion, activa, precioHora  FROM PISTAS WHERE idPista = @IdPista";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", idPista);
+                    command.Parameters.AddWithValue("@IdPista", idPista);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -108,7 +108,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE PISTAS SET Nombre = @Nombre, Tipo = @Tipo, Direccion = @Direccion, Activa = @Activa, PrecioHora = @PrecioHora WHERE idPista = @Id";
+                string query = "UPDATE PISTAS SET Nombre = @Nombre, Tipo = @Tipo, Direccion = @Direccion, Activa = @Activa, PrecioHora = @PrecioHora WHERE idPista = @IdPista";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Nombre", pista.Nombre);
@@ -128,10 +128,10 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM PISTAS WHERE idPista = @Id";
+                string query = "DELETE FROM PISTAS WHERE idPista = @IdPista";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", idPista);
+                    command.Parameters.AddWithValue("@IdPista", idPista);
 
                     await command.ExecuteNonQueryAsync();
                 }

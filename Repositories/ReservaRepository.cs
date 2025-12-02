@@ -51,7 +51,7 @@ namespace AA1.Repositories
             return reservas;
         }
 
-        public async Task<Reserva> GetByIdAsync(int id)
+        public async Task<Reserva> GetByIdAsync(int idReserva)
         {
             Reserva reserva = null;
 
@@ -59,10 +59,10 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idReserva, idUsuario, idPista, fecha, horas, precio FROM RESERVAS WHERE Id = @Id";
+                string query = "SELECT idReserva, idUsuario, idPista, fecha, horas, precio FROM RESERVAS WHERE IdReserva = @IdReserva";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@IdReserva", idReserva);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -111,11 +111,11 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE RESERVAS SET idReserva = @idReserva, idUsuario = @idUsuario, idPista = @idPista, fecha = @fecha, horas =@horas, precio = @precio WHERE Id = @Id";
+                string query = "UPDATE RESERVAS SET idReserva = @idReserva, Usuario = @Usuario, idPista = @idPista, fecha = @fecha, horas =@horas, precio = @precio WHERE IdReserva = @IdReserva";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@idReserva", reserva.IdReserva);
-                    command.Parameters.AddWithValue("@idUsuario", reserva.IdUsuario);
+                    command.Parameters.AddWithValue("@Usuario", reserva.IdUsuario);
                     command.Parameters.AddWithValue("@idPista", reserva.IdPista);
                     command.Parameters.AddWithValue("@fecha", reserva.Fecha);
                     command.Parameters.AddWithValue("@horas", reserva.Horas);
@@ -126,16 +126,16 @@ namespace AA1.Repositories
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int idReserva)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM RESERVAS WHERE Id = @Id";
+                string query = "DELETE FROM RESERVAS WHERE IdReserva = @IdReserva";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@IdReserva", idReserva);
 
                     await command.ExecuteNonQueryAsync();
                 }
