@@ -19,7 +19,7 @@ CREATE TABLE PISTAS (
     tipo VARCHAR(30),
     direccion VARCHAR(255),
     activa BIT,
-    precioHora DECIMAL(10,2)
+    precioHora int
 );
 
 CREATE TABLE RESERVAS (

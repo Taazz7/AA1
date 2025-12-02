@@ -21,7 +21,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idPista, nombre, tipo, direccion, activa, precio  FROM PISTAS";
+                string query = "SELECT idPista, nombre, tipo, direccion, activa, precioHora  FROM PISTAS";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -54,7 +54,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idPista, nombre, tipo, direccion, activa, precio  FROM PISTAS WHERE idPista = @Id";
+                string query = "SELECT idPista, nombre, tipo, direccion, activa, precioHora  FROM PISTAS WHERE idPista = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", idPista);
@@ -155,15 +155,15 @@ namespace AA1.Repositories
                     command.Parameters.AddWithValue("@Nombre1", "CDM Mudejar");
                     command.Parameters.AddWithValue("@Tipo1", "baloncesto");
                     command.Parameters.AddWithValue("@Direccion1", "c/NoTengoNiIdea");
-                    command.Parameters.AddWithValue("@Activa1", 1);
-                    command.Parameters.AddWithValue("@PrecioHora1", 5.50);
+                    command.Parameters.AddWithValue("@Activa1", true);
+                    command.Parameters.AddWithValue("@PrecioHora1", 5);
 
                     // Parámetros para el segundo bebida
                     command.Parameters.AddWithValue("@Nombre2", "La Romareda");
                     command.Parameters.AddWithValue("@Tipo2", "futbol");
                     command.Parameters.AddWithValue("@Direccion2", "c/ParadaDelTranvia");
-                    command.Parameters.AddWithValue("@Activa2", 0);
-                    command.Parameters.AddWithValue("@PrecioHora2", 7.29);
+                    command.Parameters.AddWithValue("@Activa2", false);
+                    command.Parameters.AddWithValue("@PrecioHora2", 7);
 
                     await command.ExecuteNonQueryAsync();
                 }
