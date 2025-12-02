@@ -14,16 +14,9 @@ namespace AA1.Repositories
         private readonly string _direccion;
         private readonly DateTime _fechaNac;
 
-        public UsuarioRepository(IConfiguration configuration, int idUsuario, string nombre, string apellido, int telefono, string direccion, DateTime fechaNac)
+        public UsuarioRepository(IConfiguration configuration)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
-            _idUsuario = idUsuario;
-            _nombre = nombre;
-            _apellido = apellido;
-            _telefono = telefono;
-            _direccion = direccion;
-            _fechaNac = fechaNac;
-        }
         
 
         public async Task<List<Usuario>> GetAllAsync()

@@ -14,15 +14,11 @@ namespace AA1.Repositories
         private readonly int _horas;
         private readonly int _precio;
 
-        public ReservaRepository(IConfiguration configuration, int idReserva, IUsuarioRepository usuariorepository, IPistaRepository pistarepository, DateTime fecha, int horas, int precio)
+        public ReservaRepository(IConfiguration configuration, IUsuarioRepository usuariorepository, IPistaRepository pistarepository)
         {
              _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
-            _idReserva = idReserva;
             _usuariorepository = usuariorepository;
             _pistarepository = pistarepository;
-            _fecha = fecha;
-            _horas = horas;
-            _precio = precio;
         }
         
 
