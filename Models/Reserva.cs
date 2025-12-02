@@ -19,7 +19,4 @@ public class Reserva {
         Precio = precio;
     }
 
-    public void MostrarDetalles();
-
-
 }

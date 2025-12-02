@@ -19,6 +19,4 @@ public class Usuario {
         FechaNac = fechaNac;
     }
 
-    public void MostrarDetalles();
-
 }

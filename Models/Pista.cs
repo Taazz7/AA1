@@ -19,7 +19,5 @@ public class Pista {
         PrecioHora = precioHora;
     }
 
-    public void MostrarDetalles();
-
 
 }
