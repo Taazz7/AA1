@@ -31,7 +31,7 @@ namespace AA1.Services
             if (string.IsNullOrWhiteSpace(material.Nombre))
                 throw new ArgumentException("El nombre del plato no puede estar vacío.");
             
-            if (material.Disponibilidad != 1 || material.Disponibilidad != 0)
+            if (material.Disponibilidad != 1 && material.Disponibilidad != 0)
                 throw new ArgumentException("La disponibilidad no puede ser distinta de 1(True) o 0(False).");
 
             await _materialRepository.AddAsync(material);

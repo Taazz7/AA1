@@ -6,24 +6,14 @@ namespace AA1.Repositories
     public class MantenimientoRepository : IMantenimientoRepository
     {
         private readonly string _connectionString;
-        private readonly int _idMantenimiento;
-        private readonly string _nombre;
-        private readonly int _tlfno;
-        private readonly IPistaRepository _idPista;
-        private readonly int _cif;
-        private readonly string _correo;
+        private readonly IPistaRepository _pistaRepository;
 
-        public MantenimientoRepository(IConfiguration configuration, int idMantenimiento, string nombre, int tlfno, IPistaRepository idPista, int cif, string correo)
+        // SOLO inyecta dependencias resolvibles
+        public MantenimientoRepository(IConfiguration configuration, IPistaRepository pistaRepository)
         {
-             _connectionString = configuration.GetConnectionString("AA1") ?? "Not found";
-            _idMantenimiento = idMantenimiento;
-            _nombre = nombre;
-            _tlfno = tlfno;
-            _idPista = idPista;
-            _cif = cif;
-            _correo = correo;
+            _connectionString = configuration.GetConnectionString("AA1") ?? throw new InvalidOperationException("Connection string 'AA1' not found");
+            _pistaRepository = pistaRepository;
         }
-        
 
         public async Task<List<Mantenimiento>> GetAllAsync()
         {
@@ -33,7 +23,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM MANTENIMIENTOS";
+                string query = "SELECT idMantenimiento, nombre, tlfn, cif, idPista, correo FROM MANTENIMIENTOS";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -46,7 +36,7 @@ namespace AA1.Repositories
                                 Nombre = reader.GetString(1),
                                 Tlfno = reader.GetInt32(2),
                                 Cif = reader.GetInt32(3),
-                                IdPista = await _idPista.GetByIdAsync(reader.GetInt32(4)),
+                                IdPista = await _pistaRepository.GetByIdAsync(reader.GetInt32(4)),
                                 Correo = reader.GetString(5)
                             }; 
 
@@ -58,15 +48,15 @@ namespace AA1.Repositories
             return mantenimientos;
         }
 
-        public async Task<Mantenimiento> GetByIdAsync(int id)
+        public async Task<Mantenimiento?> GetByIdAsync(int id)
         {
-            Mantenimiento mantenimiento = null;
+            Mantenimiento? mantenimiento = null;
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT idMantenimiento, nombre, tlfno, cif, idPista, correo FROM MANTENIMIENTOS WHERE Id = @Id";
+                string query = "SELECT idMantenimiento, nombre, tlfn, cif, idPista, correo FROM MANTENIMIENTOS WHERE idMantenimiento = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -81,7 +71,7 @@ namespace AA1.Repositories
                                 Nombre = reader.GetString(1),
                                 Tlfno = reader.GetInt32(2),
                                 Cif = reader.GetInt32(3),
-                                IdPista = await _idPista.GetByIdAsync(reader.GetInt32(4)),
+                                IdPista = await _pistaRepository.GetByIdAsync(reader.GetInt32(4)),
                                 Correo = reader.GetString(5)
                             };
                         }
@@ -97,14 +87,13 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO MANTENIMIENTOS (idMantenimiento, nombre, tlfno, cif, idPista, correo) VALUES (@idMantenimiento, @nombre, @fecha, @tipo, @idPista, @correo)";
+                string query = "INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo) VALUES (@nombre, @tlfno, @cif, @idPista, @correo)";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMantenimiento", mantenimiento.IdMantenimiento);
                     command.Parameters.AddWithValue("@nombre", mantenimiento.Nombre);
                     command.Parameters.AddWithValue("@tlfno", mantenimiento.Tlfno);
                     command.Parameters.AddWithValue("@cif", mantenimiento.Cif);
-                    command.Parameters.AddWithValue("@idPista", mantenimiento.IdPista);
+                    command.Parameters.AddWithValue("@idPista", mantenimiento.IdPista?.IdPista ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@correo", mantenimiento.Correo);
 
                     await command.ExecuteNonQueryAsync();
@@ -118,14 +107,14 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE MANTENIMIENTOS SET idMantenimiento = @idMantenimiento, nombre = @nombre, tlfno = @tlfno, cif = @cif, idPista =@idPista, correo = @correo WHERE Id = @Id";
+                string query = "UPDATE MANTENIMIENTOS SET nombre = @nombre, tlfn = @tlfno, cif = @cif, idPista = @idPista, correo = @correo WHERE idMantenimiento = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMantenimiento", mantenimiento.IdMantenimiento);
+                    command.Parameters.AddWithValue("@Id", mantenimiento.IdMantenimiento);
                     command.Parameters.AddWithValue("@nombre", mantenimiento.Nombre);
                     command.Parameters.AddWithValue("@tlfno", mantenimiento.Tlfno);
                     command.Parameters.AddWithValue("@cif", mantenimiento.Cif);
-                    command.Parameters.AddWithValue("@idPista", mantenimiento.IdPista);
+                    command.Parameters.AddWithValue("@idPista", mantenimiento.IdPista?.IdPista ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@correo", mantenimiento.Correo);
 
                     await command.ExecuteNonQueryAsync();
@@ -139,16 +128,14 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM MANTENIMIENTOS WHERE Id = @Id";
+                string query = "DELETE FROM MANTENIMIENTOS WHERE idMantenimiento = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
-
                     await command.ExecuteNonQueryAsync();
                 }
             }
         }
-
 
         public async Task InicializarDatosAsync()
         {
@@ -156,26 +143,23 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                // Comando SQL para insertar datos iniciales
                 var query = @"
-                    INSERT INTO Mantenimiento (idMantenimiento, nombre, tlfno, cif, idPista, correo)
-                    VALUES 
-                    (@idMantenimiento1, @nombre1, @tlfno1, @cif1, @idPista1, @correo1),
-                    (@idMantenimiento2, @nombre2, @tlfno2, @cif2, @idPista2, @correo2)";
+                    IF NOT EXISTS (SELECT 1 FROM MANTENIMIENTOS)
+                    BEGIN
+                        INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo)
+                        VALUES 
+                        (@nombre1, @tlfno1, @cif1, @idPista1, @correo1),
+                        (@nombre2, @tlfno2, @cif2, @idPista2, @correo2)
+                    END";
 
                 using (var command = new SqlCommand(query, connection))
                 {
-                    // Parámetros para el primer bebida
-                    command.Parameters.AddWithValue("@idMantenimiento1", 1);
                     command.Parameters.AddWithValue("@nombre1", "Revisión red");
                     command.Parameters.AddWithValue("@tlfno1", 152847563);
                     command.Parameters.AddWithValue("@cif1", 258);
                     command.Parameters.AddWithValue("@idPista1", 1);
                     command.Parameters.AddWithValue("@correo1", "mantenimiento@club.com");
                     
-
-                    // Parámetros para el segundo bebida
-                    command.Parameters.AddWithValue("@idMantenimiento2", 2);
                     command.Parameters.AddWithValue("@nombre2", "Cambio focos");
                     command.Parameters.AddWithValue("@tlfno2", 611259566);
                     command.Parameters.AddWithValue("@cif2", 364);
@@ -186,8 +170,5 @@ namespace AA1.Repositories
                 }
             }
         }
-
-
     }
-
 }
