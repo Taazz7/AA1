@@ -85,9 +85,10 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO PISTAS (Nombre, Tipo, Direccion, Activa, PrecioHora) VALUES (@Nombre, @Tipo, @Direccion, @Activa, @PrecioHora)";
+                string query = "INSERT INTO PISTAS (IdPista, Nombre, Tipo, Direccion, Activa, PrecioHora) VALUES (@IdPista, @Nombre, @Tipo, @Direccion, @Activa, @PrecioHora)";
                 using (var command = new SqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@IdPista", pista.IdPista);
                     command.Parameters.AddWithValue("@Nombre", pista.Nombre);
                     command.Parameters.AddWithValue("@Tipo", pista.Tipo);
                     command.Parameters.AddWithValue("@Direccion", pista.Direccion);
@@ -105,10 +106,9 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE PISTAS SET Nombre = @Nombre, Tipo = @Tipo, Direccion = @Direccion, Activa = @Activa, PrecioHora = @PrecioHora WHERE dPista = @Id";
+                string query = "UPDATE PISTAS SET Nombre = @Nombre, Tipo = @Tipo, Direccion = @Direccion, Activa = @Activa, PrecioHora = @PrecioHora WHERE idPista = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", pista.IdPista);
                     command.Parameters.AddWithValue("@Nombre", pista.Nombre);
                     command.Parameters.AddWithValue("@Tipo", pista.Tipo);
                     command.Parameters.AddWithValue("@Direccion", pista.Direccion);
@@ -144,14 +144,15 @@ namespace AA1.Repositories
 
                 // Comando SQL para insertar datos iniciales
                 var query = @"
-                    INSERT INTO PISTAS (Nombre, Tipo, Direccion, Activa, PrecioHora)
+                    INSERT INTO PISTAS (IdPista, Nombre, Tipo, Direccion, Activa, PrecioHora)
                     VALUES 
-                    (@Nombre1, @Tipo1, @Direccion1, @Activa1, @PrecioHora1),
-                    (@Nombre2, @Tipo2, @Direccion2, @Activa2, @PrecioHora2)";
+                    (@IdPista1, @Nombre1, @Tipo1, @Direccion1, @Activa1, @PrecioHora1),
+                    (@IdPista2, @Nombre2, @Tipo2, @Direccion2, @Activa2, @PrecioHora2)";
 
                 using (var command = new SqlCommand(query, connection))
                 {
                     // Parámetros para el primer bebida
+                    command.Parameters.AddWithValue("@IdPista1", 3);
                     command.Parameters.AddWithValue("@Nombre1", "CDM Mudejar");
                     command.Parameters.AddWithValue("@Tipo1", "baloncesto");
                     command.Parameters.AddWithValue("@Direccion1", "c/NoTengoNiIdea");
@@ -159,6 +160,7 @@ namespace AA1.Repositories
                     command.Parameters.AddWithValue("@PrecioHora1", 5);
 
                     // Parámetros para el segundo bebida
+                    command.Parameters.AddWithValue("@IdPista2", 4);
                     command.Parameters.AddWithValue("@Nombre2", "La Romareda");
                     command.Parameters.AddWithValue("@Tipo2", "futbol");
                     command.Parameters.AddWithValue("@Direccion2", "c/ParadaDelTranvia");
