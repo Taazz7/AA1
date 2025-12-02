@@ -107,7 +107,7 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE USUARIOS SET idUsuario = @idUsuario, nombre = @nombre, apellido = @apellido, telefono = @telefono, direccion =@direccion, fechaNac = @fechaNac WHERE Id = @Id";
+                string query = "UPDATE USUARIOS SET idUsuario = @idUsuario, nombre = @nombre, apellido = @apellido, telefono = @telefono, direccion =@direccion, fechaNac = @fechaNac WHERE IdUsuario = @IdUsuario";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@idUsuario", usuario.IdUsuario);
