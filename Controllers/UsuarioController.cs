@@ -11,10 +11,12 @@ namespace AA1.Controllers
     private static List<Usuario> usuario = new List<Usuario>();
 
     private readonly IUsuarioRepository _repository;
+    private readonly IReservaRepository _reservaRepository; 
 
-    public UsuarioController(IUsuarioRepository repository)
+    public UsuarioController(IUsuarioRepository repository, IReservaRepository reservaRepository) 
         {
             _repository = repository;
+            _reservaRepository = reservaRepository; 
         }
     
         [HttpGet]
@@ -23,6 +25,7 @@ namespace AA1.Controllers
             var usuarios = await _repository.GetAllAsync();
             return Ok(usuarios);
         }
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
@@ -32,6 +35,22 @@ namespace AA1.Controllers
                 return NotFound();
             }
             return Ok(usuario);
+        }
+
+        // ENDPOINT USUARIO PARA RESERVAS
+        [HttpGet("{id}/reservas")]
+        public async Task<ActionResult<List<Reserva>>> GetReservasByUsuario(int id)
+        {
+            // Verificar que el usuario existe
+            var usuario = await _repository.GetByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound(new { mensaje = $"Usuario con ID {id} no encontrado" });
+            }
+
+            // Obtener las reservas del usuario
+            var reservas = await _reservaRepository.GetByUsuarioIdAsync(id);
+            return Ok(reservas);
         }
 
         [HttpPost]
@@ -60,8 +79,6 @@ namespace AA1.Controllers
             await _repository.UpdateAsync(existingUsuario);
             return NoContent();
         }
-
-        ///Cambio necesario///
   
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeleteUsuario(int id)

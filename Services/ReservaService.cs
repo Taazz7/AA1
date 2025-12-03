@@ -53,5 +53,20 @@ namespace AA1.Services
         public async Task InicializarDatosAsync() {
             await _reservaRepository.InicializarDatosAsync();
         }
+
+
+// reservas 1 user
+
+    public async Task<List<Reserva>> GetByUsuarioIdAsync(int idUsuario)
+    {
+        if (idUsuario <= 0)
+            throw new ArgumentException("El ID del usuario debe ser mayor que cero.");
+
+        return await _reservaRepository.GetByUsuarioIdAsync(idUsuario);
+    }
+
+
+
+
     }
 }

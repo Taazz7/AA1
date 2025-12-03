@@ -180,6 +180,46 @@ namespace AA1.Repositories
             }
         }
 
+// reservas 1 user
+
+public async Task<List<Reserva>> GetByUsuarioIdAsync(int idUsuario)
+{
+    var reservas = new List<Reserva>();
+
+    using (var connection = new SqlConnection(_connectionString))
+    {
+        await connection.OpenAsync();
+
+        string query = "SELECT idReserva, idUsuario, idPista, fecha, horas, precio FROM RESERVAS WHERE idUsuario = @IdUsuario";
+        using (var command = new SqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@IdUsuario", idUsuario);
+
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    var reserva = new Reserva
+                    {
+                        IdReserva = reader.GetInt32(0),
+                        IdUsuario = await _usuariorepository.GetByIdAsync(reader.GetInt32(1)),
+                        IdPista = await _pistarepository.GetByIdAsync(reader.GetInt32(2)),
+                        Fecha = reader.GetDateTime(3),
+                        Horas = reader.GetInt32(4),
+                        Precio = reader.GetInt32(5)
+                    };
+
+                    reservas.Add(reserva);
+                }
+            }
+        }
+    }
+    return reservas;
+}
+
+
+
+
 
     }
 

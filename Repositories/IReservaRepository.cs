@@ -10,5 +10,6 @@ namespace AA1.Repositories
         Task UpdateAsync(Reserva reserva);
         Task DeleteAsync(int id);
         Task InicializarDatosAsync();
+        Task<List<Reserva>> GetByUsuarioIdAsync(int idUsuario); //Reservas de 1 User
     }
 }
