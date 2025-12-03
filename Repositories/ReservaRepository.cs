@@ -90,17 +90,21 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO RESERVAS (idReserva, idUsuario, idPista, fecha, horas, precio) VALUES (@idReserva, @idUsuario, @idPista, @fecha, @horas, @precio)";
+                // QUITAMOS idReserva del INSERT
+                string query = @"INSERT INTO RESERVAS (idUsuario, idPista, fecha, horas, precio) 
+                                OUTPUT INSERTED.idReserva
+                                VALUES (@idUsuario, @idPista, @fecha, @horas, @precio)";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idReserva", reserva.IdReserva);
-                    command.Parameters.AddWithValue("@idUsuario", reserva.IdUsuario);
-                    command.Parameters.AddWithValue("@idPista", reserva.IdPista);
+                    command.Parameters.AddWithValue("@idUsuario", reserva.IdUsuario?.IdUsuario ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@idPista", reserva.IdPista?.IdPista ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@fecha", reserva.Fecha);
                     command.Parameters.AddWithValue("@horas", reserva.Horas);
                     command.Parameters.AddWithValue("@precio", reserva.Precio);
 
-                    await command.ExecuteNonQueryAsync();
+                    var newId = await command.ExecuteScalarAsync();
+                    reserva.IdReserva = Convert.ToInt32(newId);
                 }
             }
         }

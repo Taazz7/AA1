@@ -86,17 +86,21 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO USUARIOS (idUsuario, nombre, apellido, telefono, direccion, fechaNac) VALUES (@idUsuario, @nombre, @apellido, @telefono, @direccion, @fechaNac)";
+                // QUITAMOS idUsuario del INSERT
+                string query = @"INSERT INTO USUARIOS (nombre, apellido, telefono, direccion, fechaNac) 
+                                OUTPUT INSERTED.idUsuario
+                                VALUES (@nombre, @apellido, @telefono, @direccion, @fechaNac)";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idUsuario", usuario.IdUsuario);
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@telefono", usuario.Telefono);
                     command.Parameters.AddWithValue("@direccion", usuario.Direccion);
                     command.Parameters.AddWithValue("@fechaNac", usuario.FechaNac);
 
-                    await command.ExecuteNonQueryAsync();
+                    var newId = await command.ExecuteScalarAsync();
+                    usuario.IdUsuario = Convert.ToInt32(newId);
                 }
             }
         }

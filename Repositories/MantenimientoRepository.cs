@@ -87,7 +87,11 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo) VALUES (@nombre, @tlfno, @cif, @idPista, @correo)";
+                
+                string query = @"INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo) 
+                                OUTPUT INSERTED.idMantenimiento
+                                VALUES (@nombre, @tlfno, @cif, @idPista, @correo)";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nombre", mantenimiento.Nombre);
@@ -96,7 +100,9 @@ namespace AA1.Repositories
                     command.Parameters.AddWithValue("@idPista", mantenimiento.IdPista?.IdPista ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@correo", mantenimiento.Correo);
 
-                    await command.ExecuteNonQueryAsync();
+                    // Obtener el ID generado
+                    var newId = await command.ExecuteScalarAsync();
+                    mantenimiento.IdMantenimiento = Convert.ToInt32(newId);
                 }
             }
         }

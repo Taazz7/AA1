@@ -88,17 +88,21 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO MATERIALES (idMaterial, nombre, cantidad, disponibilidad, idPista, fechaAct) VALUES (@idMaterial, @nombre, @cantidad, @disponibilidad, @idPista, @fechaAct)";
+                string query = @"INSERT INTO MATERIALES (nombre, cantidad, disponibilidad, idPista, fechaAct) 
+                                OUTPUT INSERTED.idMaterial
+                                VALUES (@nombre, @cantidad, @disponibilidad, @idPista, @fechaAct)";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMaterial", material.IdMaterial);
                     command.Parameters.AddWithValue("@nombre", material.Nombre);
                     command.Parameters.AddWithValue("@cantidad", material.Cantidad);
                     command.Parameters.AddWithValue("@disponibilidad", material.Disponibilidad);
-                    command.Parameters.AddWithValue("@idPista", material.IdPista);
+                    command.Parameters.AddWithValue("@idPista", material.IdPista?.IdPista ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@fechaAct", material.FechaActu);
 
-                    await command.ExecuteNonQueryAsync();
+                    // Obtener el ID generado
+                    var newId = await command.ExecuteScalarAsync();
+                    material.IdMaterial = Convert.ToInt32(newId);
                 }
             }
         }

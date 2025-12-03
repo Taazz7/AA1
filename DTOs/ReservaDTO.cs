@@ -12,6 +12,7 @@ namespace AA1.DTOs
 
     public class CreateReservaDto
     {
+        public int IdReserva { get; set; }
         public int IdUsuario { get; set; }
         public int IdPista { get; set; }
         public DateTime Fecha { get; set; }

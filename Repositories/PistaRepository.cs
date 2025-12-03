@@ -85,17 +85,21 @@ namespace AA1.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO PISTAS (IdPista, Nombre, Tipo, Direccion, Activa, PrecioHora) VALUES (@IdPista, @Nombre, @Tipo, @Direccion, @Activa, @PrecioHora)";
+                // QUITAMOS IdPista del INSERT
+                string query = @"INSERT INTO PISTAS (Nombre, Tipo, Direccion, Activa, PrecioHora) 
+                                OUTPUT INSERTED.idPista
+                                VALUES (@Nombre, @Tipo, @Direccion, @Activa, @PrecioHora)";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@IdPista", pista.IdPista);
                     command.Parameters.AddWithValue("@Nombre", pista.Nombre);
                     command.Parameters.AddWithValue("@Tipo", pista.Tipo);
                     command.Parameters.AddWithValue("@Direccion", pista.Direccion);
                     command.Parameters.AddWithValue("@Activa", pista.Activa);
                     command.Parameters.AddWithValue("@PrecioHora", pista.PrecioHora);
 
-                    await command.ExecuteNonQueryAsync();
+                    var newId = await command.ExecuteScalarAsync();
+                    pista.IdPista = Convert.ToInt32(newId);
                 }
             }
         }
