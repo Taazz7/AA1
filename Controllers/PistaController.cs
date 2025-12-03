@@ -86,7 +86,7 @@ namespace AA1.Controllers
             return Ok(pistas);
         }
 
-        /*Ejemplos de uso: 
+        /*Ejemplos de uso para postman: 
         # Filtrar por tipo
         GET /api/pista/search?tipo=Tenis
 
