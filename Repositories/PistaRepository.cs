@@ -165,19 +165,19 @@ namespace AA1.Repositories
                 // Ordenación
                 if (!string.IsNullOrWhiteSpace(orderBy))
                 {
-                    var validColumns = new[] { "nombre", "tipo", "precioHora", "direccion" };
+                    var validColumns = new[] { "nombre", "tipo", "preciohora", "direccion" };
                     var orderByLower = orderBy.ToLower();
                     
                     if (validColumns.Contains(orderByLower))
                     {
                         var direction = ascending ? "ASC" : "DESC";
                         query += $" ORDER BY {orderByLower} {direction}";
-                    }
-                }
-                else
+                    }else
                 {
                     query += " ORDER BY nombre ASC";
                 }
+                }
+                
 
                 using (var command = new SqlCommand(query, connection))
                 {
