@@ -138,6 +138,74 @@ namespace AA1.Repositories
             }
         }
 
+        public async Task<List<Pista>> GetAllFilteredAsync(string? tipo, bool? activa, string? orderBy, bool ascending)
+        {
+            var pistas = new List<Pista>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "SELECT idPista, nombre, tipo, direccion, activa, precioHora FROM PISTAS WHERE 1=1";
+                var parameters = new List<SqlParameter>();
+
+                // Filtros
+                if (!string.IsNullOrWhiteSpace(tipo))
+                {
+                    query += " AND tipo = @Tipo";
+                    parameters.Add(new SqlParameter("@Tipo", tipo));
+                }
+
+                if (activa.HasValue)
+                {
+                    query += " AND activa = @Activa";
+                    parameters.Add(new SqlParameter("@Activa", activa.Value));
+                }
+
+                // Ordenación
+                if (!string.IsNullOrWhiteSpace(orderBy))
+                {
+                    var validColumns = new[] { "nombre", "tipo", "precioHora", "direccion" };
+                    var orderByLower = orderBy.ToLower();
+                    
+                    if (validColumns.Contains(orderByLower))
+                    {
+                        var direction = ascending ? "ASC" : "DESC";
+                        query += $" ORDER BY {orderByLower} {direction}";
+                    }
+                }
+                else
+                {
+                    query += " ORDER BY nombre ASC";
+                }
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var pista = new Pista
+                            {
+                                IdPista = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                Tipo = reader.GetString(2),
+                                Direccion = reader.GetString(3),
+                                Activa = reader.GetBoolean(4),
+                                PrecioHora = reader.GetInt32(5)
+                            };
+
+                            pistas.Add(pista);
+                        }
+                    }
+                }
+            }
+            return pistas;
+        }
+
+
         public async Task InicializarDatosAsync()
         {
             using (var connection = new SqlConnection(_connectionString))

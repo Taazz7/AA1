@@ -75,5 +75,31 @@ namespace AA1.Controllers
            return NoContent();
        }
 
+       [HttpGet("search")]
+        public async Task<ActionResult<List<Pista>>> SearchPistas(
+            [FromQuery] string? tipo,
+            [FromQuery] bool? activa,
+            [FromQuery] string? orderBy,
+            [FromQuery] bool ascending = true)
+        {
+            var pistas = await _repository.GetAllFilteredAsync(tipo, activa, orderBy, ascending);
+            return Ok(pistas);
+        }
+
+        /*Ejemplos de uso: 
+        # Filtrar por tipo
+        GET /api/pista/search?tipo=Tenis
+
+        # Filtrar por activa
+        GET /api/pista/search?activa=true
+
+        # Ordenar por precio (descendente)
+        GET /api/pista/search?orderBy=precioHora&ascending=false
+
+        # Ordenar por nombre (ascendente)
+        GET /api/pista/search?orderBy=nombre&ascending=true
+
+        # Combinar: pistas de tenis activas, ordenadas por precio
+        GET /api/pista/search?tipo=Tenis&activa=true&orderBy=precioHora&ascending=false*/
    }
 }

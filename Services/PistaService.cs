@@ -59,5 +59,10 @@ namespace AA1.Services
         public async Task InicializarDatosAsync() {
             await _pistaRepository.InicializarDatosAsync();
         }
+
+        public async Task<List<Pista>> GetAllFilteredAsync(string? tipo, bool? activa, string? orderBy, bool ascending)
+        {
+            return await _pistaRepository.GetAllFilteredAsync(tipo, activa, orderBy, ascending);
+        }
     }
 }
