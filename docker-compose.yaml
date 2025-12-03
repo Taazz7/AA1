@@ -22,7 +22,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "4779:4799" # puerto modificado para la api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDb;User=sa;Password=YourPassword123;
