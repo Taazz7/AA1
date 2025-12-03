@@ -22,7 +22,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - "4779:4799" # puerto modificado para la api
+      - "5000:5000" # puerto modificado para la api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDb;User=sa;Password=YourPassword123;
@@ -38,7 +38,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     ports:
-      - "1433:1433"
+      - "1433:1433" # puerto modificado para la api
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourPassword123
