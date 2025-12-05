@@ -1,51 +1,51 @@
 version: '3.9'
 
 services:
-  # Servicio de SQL Server
+  # Base de datos SQL Server
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: aa1_sqlserver
     ports:
-      - "5556:1433"  # Puerto invertido (4569 -> 9654)
+      - "5556:1433"  # Puerto 5556 según tu usuario a26555
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - MSSQL_SA_PASSWORD=YourStrong(!)Password123
       - MSSQL_PID=Express
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
-      - aa1_network
+      - backend
     restart: unless-stopped
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "SELECT 1" || exit 1
-      interval: 10s
-      timeout: 3s
-      retries: 10
-      start_period: 10s
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong(!)Password123' -Q 'SELECT 1' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
-  # Servicio de la API .NET
+  # API ASP.NET Core
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: aa1-api:latest
     container_name: aa1_api
     ports:
-      - "6555:6555"  # Puerto según las 4 últimas cifras del email
+      - "26555:5000"  # Puerto 26555 según tu usuario a26555
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:6555
-      - ConnectionStrings__AA1=Server=sqlserver;Database=AA1;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=AA1;User Id=sa;Password=YourStrong(!)Password123;TrustServerCertificate=True;Encrypt=False;
     depends_on:
       sqlserver:
         condition: service_healthy
     networks:
-      - aa1_network
+      - backend
     restart: unless-stopped
 
 networks:
-  aa1_network:
+  backend:
     driver: bridge
 
 volumes:
   sqlserver_data:
+    driver: local
