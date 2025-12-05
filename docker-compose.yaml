@@ -1,66 +1,51 @@
 version: '3.9'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api
-    networks:
-      - backend
-      - frontend
-    restart: unless-stopped
-
-  api:
-    image: mcr.microsoft.com/dotnet/aspnet:8.0
-    container_name: dotnet_api
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000" # puerto modificado para la api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDb;User=sa;Password=YourPassword123;
-    depends_on:
-      - sqlserver
-    volumes:
-      - ./api:/app
-    networks:
-      - backend
-    restart: unless-stopped
-
+  # Servicio de SQL Server
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    container_name: aa1_sqlserver
     ports:
-      - "1433:1433" # puerto modificado para la api
+      - "5556:1433"  # Puerto invertido (4569 -> 9654)
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourPassword123
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
       - MSSQL_PID=Express
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
-      - backend
+      - aa1_network
     restart: unless-stopped
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
-  redis:
-    image: redis:latest
-    container_name: redis
+  # Servicio de la API .NET
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aa1-api:latest
+    container_name: aa1_api
     ports:
-      - "6379:6379"
+      - "6555:6555"  # Puerto según las 4 últimas cifras del email
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:6555
+      - ConnectionStrings__AA1=Server=sqlserver;Database=AA1;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
     networks:
-      - backend
+      - aa1_network
     restart: unless-stopped
 
 networks:
-  backend:
-  frontend:
+  aa1_network:
+    driver: bridge
 
 volumes:
   sqlserver_data:
