@@ -3,7 +3,7 @@ version: '3.9'
 services:
   # Base de datos SQL Server
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
     container_name: aa1_sqlserver
     ports:
       - "5556:1433"  # Puerto 5556 según tu usuario a26555
@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: aa1_api
     ports:
-      - "26555:5000"  # Puerto 26555 según tu usuario a26555
+      - "6555:5000"  # Puerto 6555 según tu usuario a26555
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
