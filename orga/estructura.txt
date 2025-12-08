@@ -1,0 +1,48 @@
+Entidades
+	-Pistas
+	-Reservas
+	-Usuarios
+	-Eventos
+	-Materiales
+
+Pistas
+	Get /pistas -> listar
+	Get /pistas/{id} -> mostrar 1 pista concreta
+	Post /pistas -> crear una pista
+	Put /pistas/{id} -> actualizar pista
+	Delete /pistas/{id} -> elimina
+	[Get /pistas/tipo] -> todas del mismo tipo
+
+Reservas
+	Get /reservas -> listar
+	Get /reservas/{id} -> mostrar 1 reservas concreta
+	Post /reservas -> crear una reservas
+	Put /reservas/{id} -> actualizar reservas
+	Delete /reservas/{id} -> elimina
+	[Get /reservas/usuario] -> muestra reservas de 1 user
+	[Get /reservas/pista] -> reservas de 1 pista
+
+Usuarios
+	Get /usuario-> listar
+	Get /usuario/{id} -> mostrar 1 usuario
+	Post /usuario -> crear un usuario
+	Put /usuario/{id} -> actualizar usuario
+	Delete /usuario/{id} -> elimina
+	[Get /usuarios/{id}/reservas]
+
+Eventos
+	Get /eventos -> listar
+	Get /eventos/{id} -> mostrar 1 evento
+	Post /eventos -> crear un evento
+	Put /eventos/{id} -> actualizar evento
+	Delete /eventos/{id} -> elimina
+	[Get /eventos/pista/{idPista}] -> eventos en 1 pista
+
+Material
+	Get /materiales -> listar
+	Get /materiales/{id} -> mostrar 1 material
+	Post /materiales -> crear un material
+	Put /materiales/{id} -> actualizar material
+	Delete /materiales/{id} -> elimina
+	[Get /materiales/disponible]
+	[Get /materiales/usado]

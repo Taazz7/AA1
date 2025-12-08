@@ -1,66 +1,51 @@
 version: '3.9'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api
-    networks:
-      - backend
-      - frontend
-    restart: unless-stopped
-
-  api:
-    image: mcr.microsoft.com/dotnet/aspnet:8.0
-    container_name: dotnet_api
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDb;User=sa;Password=YourPassword123;
-    depends_on:
-      - sqlserver
-    volumes:
-      - ./api:/app
-    networks:
-      - backend
-    restart: unless-stopped
-
+  # Base de datos SQL Server
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
+    container_name: aa1_sqlserver
     ports:
-      - "1433:1433"
+      - "5556:1433"  # Puerto 5556 según tu usuario a26555
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourPassword123
+      - MSSQL_SA_PASSWORD=YourStrong(!)Password123
       - MSSQL_PID=Express
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
       - backend
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong(!)Password123' -Q 'SELECT 1' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
-  redis:
-    image: redis:latest
-    container_name: redis
+  # API ASP.NET Core
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aa1_api
     ports:
-      - "6379:6379"
+      - "6555:5000"  # Puerto 6555 según tu usuario a26555
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=AA1;User Id=sa;Password=YourStrong(!)Password123;TrustServerCertificate=True;Encrypt=False;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
     networks:
       - backend
     restart: unless-stopped
 
 networks:
   backend:
-  frontend:
+    driver: bridge
 
 volumes:
   sqlserver_data:
+    driver: local
