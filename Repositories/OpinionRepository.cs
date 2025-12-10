@@ -149,76 +149,70 @@ namespace AA1.Repositories
 
 
         public async Task<List<OpinionDto>> GetAllFilteredPuntuAsync(int? puntuacion, string? orderBy, bool ascending)
+{
+    var opiniones = new List<OpinionDto>();
+
+    using (var connection = new SqlConnection(_connectionString))
+    {
+        await connection.OpenAsync();
+
+        // CORREGIDO: Incluir idOpinion e idPista en el SELECT
+        string query = "SELECT idOpinion, nombre, texto, puntuacion, fechaCrea, idPista FROM OPINIONES WHERE 1=1";
+        var parameters = new List<SqlParameter>();
+
+        // Filtros
+        if (puntuacion.HasValue && puntuacion > 0)
         {
-            var opiniones = new List<OpinionDto>();
+            query += " AND puntuacion = @Puntuacion";
+            parameters.Add(new SqlParameter("@Puntuacion", puntuacion.Value));
+        }
 
-            using (var connection = new SqlConnection(_connectionString))
+        // Ordenación
+        if (!string.IsNullOrWhiteSpace(orderBy))
+        {
+            var validColumns = new[] { "nombre", "texto", "puntuacion", "fechacrea", "idpista" };
+            var orderByLower = orderBy.ToLower();
+            
+            if (validColumns.Contains(orderByLower))
             {
-                await connection.OpenAsync();
+                var direction = ascending ? "ASC" : "DESC";
+                query += $" ORDER BY {orderByLower} {direction}";
+            }
+            else
+            {
+                query += " ORDER BY fechaCrea DESC"; // Orden por defecto más lógico
+            }
+        }
+        else
+        {
+            query += " ORDER BY fechaCrea DESC"; // Orden por defecto si no se especifica
+        }
 
-                string query = "SELECT nombre, texto, puntuacion, fechaCrea FROM OPINIONES WHERE 1=1";
-                var parameters = new List<SqlParameter>();
+        using (var command = new SqlCommand(query, connection))
+        {
+            command.Parameters.AddRange(parameters.ToArray());
 
-                // Filtros
-                if (puntuacion>0)
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
                 {
-                    query += " AND puntuacion = @Puntuacion";
-                    parameters.Add(new SqlParameter("@Puntuacion", puntuacion));
-                }  
-
-                // Ordenación
-                if (!string.IsNullOrWhiteSpace(orderBy))
-                {
-                    var validColumns = new[] { "nombre", "texto","puntuacion", "fechaCrea" };
-                    var orderByLower = orderBy.ToLower();
-                    
-                    if (validColumns.Contains(orderByLower))
+                    var opinionDto = new OpinionDto
                     {
-                        var direction = ascending ? "ASC" : "DESC";
-                        query += $" ORDER BY {orderByLower} {direction}";
-                    }else
-                {
-                    query += " ORDER BY nombre ASC";
-                }
-                }            
+                        IdOpinion = reader.GetInt32(0),      
+                        Nombre = reader.GetString(1),        
+                        Texto = reader.GetString(2),       
+                        Puntuacion = reader.GetInt32(3),    
+                        FechaCrea = reader.GetDateTime(4),   
+                        IdPista = reader.GetInt32(5)     
+                    };
 
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddRange(parameters.ToArray());
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            /*var opinion = new Opinion
-                            {
-                                IdOpinion = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Texto = reader.GetString(2),
-                                Puntuacion = reader.GetInt32(3),
-                                FechaCrea = reader.GetDateTime(4)
-                               
-                            };*/
-
-                            var opinionDto = new OpinionDto
-                            {
-                                IdOpinion = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Texto = reader.GetString(2),
-                                Puntuacion = reader.GetInt32(3),
-                                FechaCrea = reader.GetDateTime(4), 
-                               // IdPista = reader.GetInt32(5)
-                            };
-
-
-                            opiniones.Add(opinionDto);
-                        }
-                    }
+                    opiniones.Add(opinionDto);
                 }
             }
-            return opiniones;
         }
+    }
+    return opiniones;
+}
 
         
 
