@@ -62,6 +62,16 @@ CREATE TABLE MANTENIMIENTOS (
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
 );
 
+CREATE TABLE OPINIONES (
+    idOpinion INT PRIMARY KEY IDENTITY(1,1),  -- Auto-incremental
+    nombre VARCHAR(50),
+    texto VARCHAR(100),
+    puntuacion INT,
+    fechaCrea DATE,
+    idPista INT,
+    FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
+);
+
 
 -- 3. Insertar datos de ejemplo (sin especificar los IDs)
 
@@ -103,6 +113,12 @@ VALUES ('Revisión red', 152847563, 258, 1, 'mantenimiento@club.com');
 INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo) 
 VALUES ('Cambio focos', 611259566, 364, 2, 'soporte@club.com');
 
+-- Opiniones
+INSERT INTO OPINIONES (nombre, texto, puntuacion, fechaCrea, idPista) 
+VALUES ('Pepe', 'texto ejemplo', 3, '1990-05-15', 2);
+
+INSERT INTO OPINIONES (nombre, texto, puntuacion, fechaCrea, idPista) 
+VALUES ('Luis', 'apruebame pls', 5, '1985-11-30', 2);
 
 -- Verificacion
 SELECT 'USUARIOS' AS Tabla, COUNT(*) AS Registros FROM USUARIOS

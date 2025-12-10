@@ -11,12 +11,14 @@ builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<IPistaRepository, PistaRepository>();
 builder.Services.AddScoped<IReservaRepository, ReservaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IOpinionRepository, OpinionRepository>();
 
 builder.Services.AddScoped<IMantenimientoService, MantenimientoService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
 builder.Services.AddScoped<IPistaService, PistaService>();
 builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IOpinionService, OpinionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

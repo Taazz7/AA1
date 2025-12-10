@@ -6,7 +6,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
     container_name: aa1_sqlserver
     ports:
-      - "5556:1433"  # Puerto 5556 según tu usuario a26555
+      - "6779:1433"  # Puerto 6779 según tu usuario a24779
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourStrong(!)Password123
@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: aa1_api
     ports:
-      - "6555:5000"  # Puerto 6555 según tu usuario a26555
+      - "5779:5000"  # Puerto 5779 según tu usuario a24779
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
