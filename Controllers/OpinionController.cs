@@ -1,5 +1,6 @@
 using AA1.DTOs;
 using AA1.Repositories;
+using AA1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Models;
@@ -12,19 +13,19 @@ namespace AA1.Controllers
    {
     private static List<Opinion> opinion = new List<Opinion>();
 
-    private readonly IOpinionRepository _repository;
-    private readonly IPistaRepository _pistaRepository; 
+    private readonly IOpinionService _service;
+    private readonly IPistaService _pistaService; 
 
-    public OpinionController(IOpinionRepository repository, IPistaRepository pistaRepository) 
+    public OpinionController(IOpinionService service, IPistaService pistaService) 
         {
-            _repository = repository;
-            _pistaRepository = pistaRepository; 
+            _service = service;
+            _pistaService = pistaService; 
         }
     
         [HttpGet]
         public async Task<ActionResult<List<OpinionDto>>> GetOpinion()
         {
-            var opiniones = await _repository.GetAllAsync();
+            var opiniones = await _service.GetAllAsync();
             var opinionesDto = opiniones.Select(r => new OpinionDto
             {
                 IdOpinion = r.IdOpinion,
@@ -41,7 +42,7 @@ namespace AA1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<OpinionDto>> GetOpinion(int id)
         {
-            var opinion = await _repository.GetByIdAsync(id);
+            var opinion = await _service.GetByIdAsync(id);
             if (opinion == null)
             {
                 return NotFound();
@@ -68,21 +69,21 @@ namespace AA1.Controllers
             [FromQuery] string? orderBy,
             [FromQuery] bool ascending = true)
         {
-            var opiniones = await _repository.GetAllFilteredPuntuAsync(puntuacion, orderBy, ascending);
+            var opiniones = await _service.GetAllFilteredPuntuAsync(puntuacion, orderBy, ascending);
             return Ok(opiniones);
         }
 
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetTotalOpiniones()
         {
-            var count = await _repository.GetTotalCountAsync();
+            var count = await _service.GetTotalCountAsync();
             return Ok(new { total = count });
         }
 
         [HttpPost]
         public async Task<ActionResult<OpinionDto>> CreateOpinion(CreateOpinionDto opinionDto)
         {
-            var pista = await _pistaRepository.GetByIdAsync(opinionDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(opinionDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -97,7 +98,7 @@ namespace AA1.Controllers
                 IdPista = pista
             };
 
-            await _repository.AddAsync(opinion);
+            await _service.AddAsync(opinion);
 
             var createDto = new OpinionDto
             {
@@ -115,13 +116,13 @@ namespace AA1.Controllers
        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOpinion(int id, OpinionDto updatedOpinionDto)
         {
-            var existingOpinion = await _repository.GetByIdAsync(id);
+            var existingOpinion = await _service.GetByIdAsync(id);
             if (existingOpinion == null)
             {
                 return NotFound();
             }
 
-             var pista = await _pistaRepository.GetByIdAsync(updatedOpinionDto.IdPista);
+             var pista = await _pistaService.GetByIdAsync(updatedOpinionDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -134,19 +135,19 @@ namespace AA1.Controllers
             existingOpinion.FechaCrea = updatedOpinionDto.FechaCrea;
             existingOpinion.IdPista = pista;
 
-            await _repository.UpdateAsync(existingOpinion);
+            await _service.UpdateAsync(existingOpinion);
             return NoContent();
         }
   
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeleteOpinion(int id)
        {
-           var opinion = await _repository.GetByIdAsync(id);
+           var opinion = await _service.GetByIdAsync(id);
            if (opinion == null)
            {
                return NotFound();
            }
-           await _repository.DeleteAsync(id);
+           await _service.DeleteAsync(id);
            return NoContent();
        }
 

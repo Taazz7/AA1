@@ -1,4 +1,5 @@
 using AA1.Repositories;
+using AA1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -10,23 +11,23 @@ namespace AA1.Controllers
    {
     private static List<Pista> pista = new List<Pista>();
 
-    private readonly IPistaRepository _repository;
+    private readonly IPistaService _service;
 
-    public PistaController(IPistaRepository repository)
+    public PistaController(IPistaService service)
         {
-            _repository = repository;
+            _service = service;
         }
     
         [HttpGet]
         public async Task<ActionResult<List<Pista>>> GetPista()
         {
-            var pistas = await _repository.GetAllAsync();
+            var pistas = await _service.GetAllAsync();
             return Ok(pistas);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Pista>> GetPista(int id)
         {
-            var pista = await _repository.GetByIdAsync(id);
+            var pista = await _service.GetByIdAsync(id);
             if (pista == null)
             {
                 return NotFound();
@@ -37,14 +38,14 @@ namespace AA1.Controllers
         [HttpPost]
         public async Task<ActionResult<Pista>> CreatePista(Pista pista)
         {
-            await _repository.AddAsync(pista);
+            await _service.AddAsync(pista);
             return CreatedAtAction(nameof(GetPista), new { id = pista.IdPista }, pista);
         }
 
        [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePista(int id, Pista updatedPista)
         {
-            var existingPista = await _repository.GetByIdAsync(id);
+            var existingPista = await _service.GetByIdAsync(id);
             if (existingPista == null)
             {
                 return NotFound();
@@ -57,7 +58,7 @@ namespace AA1.Controllers
             existingPista.Activa = updatedPista.Activa;
             existingPista.PrecioHora = updatedPista.PrecioHora;
 
-            await _repository.UpdateAsync(existingPista);
+            await _service.UpdateAsync(existingPista);
             return NoContent();
         }
 
@@ -66,12 +67,12 @@ namespace AA1.Controllers
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeletePista(int id)
        {
-           var pista = await _repository.GetByIdAsync(id);
+           var pista = await _service.GetByIdAsync(id);
            if (pista == null)
            {
                return NotFound();
            }
-           await _repository.DeleteAsync(id);
+           await _service.DeleteAsync(id);
            return NoContent();
        }
 
@@ -82,7 +83,7 @@ namespace AA1.Controllers
             [FromQuery] string? orderBy,
             [FromQuery] bool ascending = true)
         {
-            var pistas = await _repository.GetAllFilteredAsync(tipo, activa, orderBy, ascending);
+            var pistas = await _service.GetAllFilteredAsync(tipo, activa, orderBy, ascending);
             return Ok(pistas);
         }
 

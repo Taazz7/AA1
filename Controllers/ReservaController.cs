@@ -1,5 +1,6 @@
 using AA1.DTOs;
 using AA1.Repositories;
+using AA1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -9,24 +10,24 @@ namespace AA1.Controllers
     [ApiController]
     public class ReservaController : ControllerBase
     {
-        private readonly IReservaRepository _repository;
-        private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IPistaRepository _pistaRepository;
+        private readonly IReservaService _service;
+        private readonly IUsuarioService _usuarioService;
+        private readonly IPistaService _pistaService;
 
         public ReservaController(
-            IReservaRepository repository,
-            IUsuarioRepository usuarioRepository,
-            IPistaRepository pistaRepository)
+            IReservaService service,
+            IUsuarioService usuarioService,
+            IPistaService pistaService)
         {
-            _repository = repository;
-            _usuarioRepository = usuarioRepository;
-            _pistaRepository = pistaRepository;
+            _service = service;
+            _usuarioService = usuarioService;
+            _pistaService = pistaService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<ReservaDto>>> GetReserva()
         {
-            var reservas = await _repository.GetAllAsync();
+            var reservas = await _service.GetAllAsync();
             var reservasDto = reservas.Select(r => new ReservaDto
             {
                 IdReserva = r.IdReserva,
@@ -43,7 +44,7 @@ namespace AA1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ReservaDto>> GetReserva(int id)
         {
-            var reserva = await _repository.GetByIdAsync(id);
+            var reserva = await _service.GetByIdAsync(id);
             if (reserva == null)
             {
                 return NotFound();
@@ -66,13 +67,13 @@ namespace AA1.Controllers
         public async Task<ActionResult<ReservaDto>> CreateReserva(CreateReservaDto createDto)
         {
             // Validar que existan el usuario y la pista
-            var usuario = await _usuarioRepository.GetByIdAsync(createDto.IdUsuario);
+            var usuario = await _usuarioService.GetByIdAsync(createDto.IdUsuario);
             if (usuario == null)
             {
                 return BadRequest("Usuario no encontrado");
             }
 
-            var pista = await _pistaRepository.GetByIdAsync(createDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(createDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -88,7 +89,7 @@ namespace AA1.Controllers
                 Precio = createDto.Precio
             };
 
-            await _repository.AddAsync(reserva);
+            await _service.AddAsync(reserva);
 
             var reservaDto = new ReservaDto
             {
@@ -106,20 +107,20 @@ namespace AA1.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReserva(int id, UpdateReservaDto updateDto)
         {
-            var existingReserva = await _repository.GetByIdAsync(id);
+            var existingReserva = await _service.GetByIdAsync(id);
             if (existingReserva == null)
             {
                 return NotFound();
             }
 
             // Validar que existan el usuario y la pista
-            var usuario = await _usuarioRepository.GetByIdAsync(updateDto.IdUsuario);
+            var usuario = await _usuarioService.GetByIdAsync(updateDto.IdUsuario);
             if (usuario == null)
             {
                 return BadRequest("Usuario no encontrado");
             }
 
-            var pista = await _pistaRepository.GetByIdAsync(updateDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(updateDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -131,19 +132,19 @@ namespace AA1.Controllers
             existingReserva.Horas = updateDto.Horas;
             existingReserva.Precio = updateDto.Precio;
 
-            await _repository.UpdateAsync(existingReserva);
+            await _service.UpdateAsync(existingReserva);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReserva(int id)
         {
-            var reserva = await _repository.GetByIdAsync(id);
+            var reserva = await _service.GetByIdAsync(id);
             if (reserva == null)
             {
                 return NotFound();
             }
-            await _repository.DeleteAsync(id);
+            await _service.DeleteAsync(id);
             return NoContent();
         }
     }

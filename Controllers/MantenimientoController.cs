@@ -1,5 +1,6 @@
 using AA1.DTOs;
 using AA1.Repositories;
+using AA1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -9,21 +10,21 @@ namespace AA1.Controllers
     [ApiController]
     public class MantenimientoController : ControllerBase
     {
-        private readonly IMantenimientoRepository _repository;
-        private readonly IPistaRepository _pistaRepository;
+        private readonly IMantenimientoService _service;
+        private readonly IPistaService _pistaService;
 
         public MantenimientoController(
-            IMantenimientoRepository repository,
-            IPistaRepository pistaRepository)
+            IMantenimientoService service,
+            IPistaService pistaService)
         {
-            _repository = repository;
-            _pistaRepository = pistaRepository;
+            _service = service;
+            _pistaService = pistaService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<MantenimientoDto>>> GetMantenimiento()
         {
-            var mantenimientos = await _repository.GetAllAsync();
+            var mantenimientos = await _service.GetAllAsync();
             var mantenimientosDto = mantenimientos.Select(m => new MantenimientoDto
             {
                 IdMantenimiento = m.IdMantenimiento,
@@ -40,7 +41,7 @@ namespace AA1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MantenimientoDto>> GetMantenimiento(int id)
         {
-            var mantenimiento = await _repository.GetByIdAsync(id);
+            var mantenimiento = await _service.GetByIdAsync(id);
             if (mantenimiento == null)
             {
                 return NotFound();
@@ -62,7 +63,7 @@ namespace AA1.Controllers
         [HttpPost]
         public async Task<ActionResult<MantenimientoDto>> CreateMantenimiento(CreateMantenimientoDto createDto)
         {
-            var pista = await _pistaRepository.GetByIdAsync(createDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(createDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -77,7 +78,7 @@ namespace AA1.Controllers
                 Correo = createDto.Correo
             };
 
-            await _repository.AddAsync(mantenimiento);
+            await _service.AddAsync(mantenimiento);
 
             var mantenimientoDto = new MantenimientoDto
             {
@@ -95,13 +96,13 @@ namespace AA1.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMantenimiento(int id, UpdateMantenimientoDto updateDto)
         {
-            var existingMantenimiento = await _repository.GetByIdAsync(id);
+            var existingMantenimiento = await _service.GetByIdAsync(id);
             if (existingMantenimiento == null)
             {
                 return NotFound();
             }
 
-            var pista = await _pistaRepository.GetByIdAsync(updateDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(updateDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -113,19 +114,19 @@ namespace AA1.Controllers
             existingMantenimiento.IdPista = pista;
             existingMantenimiento.Correo = updateDto.Correo;
 
-            await _repository.UpdateAsync(existingMantenimiento);
+            await _service.UpdateAsync(existingMantenimiento);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMantenimiento(int id)
         {
-            var mantenimiento = await _repository.GetByIdAsync(id);
+            var mantenimiento = await _service.GetByIdAsync(id);
             if (mantenimiento == null)
             {
                 return NotFound();
             }
-            await _repository.DeleteAsync(id);
+            await _service.DeleteAsync(id);
             return NoContent();
         }
     }

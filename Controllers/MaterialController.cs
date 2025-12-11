@@ -1,5 +1,6 @@
 using AA1.DTOs;
 using AA1.Repositories;
+using AA1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -9,21 +10,21 @@ namespace AA1.Controllers
     [ApiController]
     public class MaterialController : ControllerBase
     {
-        private readonly IMaterialRepository _repository;
-        private readonly IPistaRepository _pistaRepository;
+        private readonly IMaterialService _service;
+        private readonly IPistaService _pistaService;
 
         public MaterialController(
-            IMaterialRepository repository,
-            IPistaRepository pistaRepository)
+            IMaterialService service,
+            IPistaService pistaService)
         {
-            _repository = repository;
-            _pistaRepository = pistaRepository;
+            _service = service;
+            _pistaService = pistaService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<MaterialDto>>> GetMaterial()
         {
-            var materiales = await _repository.GetAllAsync();
+            var materiales = await _service.GetAllAsync();
             var materialesDto = materiales.Select(m => new MaterialDto
             {
                 IdMaterial = m.IdMaterial,
@@ -40,7 +41,7 @@ namespace AA1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MaterialDto>> GetMaterial(int id)
         {
-            var material = await _repository.GetByIdAsync(id);
+            var material = await _service.GetByIdAsync(id);
             if (material == null)
             {
                 return NotFound();
@@ -62,7 +63,7 @@ namespace AA1.Controllers
         [HttpPost]
         public async Task<ActionResult<MaterialDto>> CreateMaterial(CreateMaterialDto createDto)
         {
-            var pista = await _pistaRepository.GetByIdAsync(createDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(createDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -77,7 +78,7 @@ namespace AA1.Controllers
                 FechaActu = createDto.FechaActu
             };
 
-            await _repository.AddAsync(material);
+            await _service.AddAsync(material);
 
             var materialDto = new MaterialDto
             {
@@ -95,13 +96,13 @@ namespace AA1.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMaterial(int id, UpdateMaterialDto updateDto)
         {
-            var existingMaterial = await _repository.GetByIdAsync(id);
+            var existingMaterial = await _service.GetByIdAsync(id);
             if (existingMaterial == null)
             {
                 return NotFound();
             }
 
-            var pista = await _pistaRepository.GetByIdAsync(updateDto.IdPista);
+            var pista = await _pistaService.GetByIdAsync(updateDto.IdPista);
             if (pista == null)
             {
                 return BadRequest("Pista no encontrada");
@@ -113,19 +114,19 @@ namespace AA1.Controllers
             existingMaterial.IdPista = pista;
             existingMaterial.FechaActu = updateDto.FechaActu;
 
-            await _repository.UpdateAsync(existingMaterial);
+            await _service.UpdateAsync(existingMaterial);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMaterial(int id)
         {
-            var material = await _repository.GetByIdAsync(id);
+            var material = await _service.GetByIdAsync(id);
             if (material == null)
             {
                 return NotFound();
             }
-            await _repository.DeleteAsync(id);
+            await _service.DeleteAsync(id);
             return NoContent();
         }
     }
