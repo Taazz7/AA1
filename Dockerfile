@@ -21,14 +21,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
 # Exponer el puerto (usa el puerto según las 4 últimas cifras de tu email)
-# Ejemplo: si tu email es a24569@svalero.com, usa el puerto 4569
-EXPOSE 6555
+EXPOSE 6655
 
 # Copiar los archivos publicados desde la etapa publish
 COPY --from=publish /app/publish .
 
 # Configurar variable de entorno para el puerto
-ENV ASPNETCORE_URLS=http://+:6555
+ENV ASPNETCORE_URLS=http://+:6655
 
 # Punto de entrada de la aplicación
 ENTRYPOINT ["dotnet", "AA1.dll"]

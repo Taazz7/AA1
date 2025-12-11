@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS MATERIALES;
 DROP TABLE IF EXISTS RESERVAS;
 DROP TABLE IF EXISTS PISTAS;
 DROP TABLE IF EXISTS USUARIOS;
+DROP TABLE IF EXISTS RESEÑAS;
 
 
 -- 2. Recrear las tablas con IDENTITY en las Primary Keys
@@ -61,6 +62,15 @@ CREATE TABLE MANTENIMIENTOS (
     correo VARCHAR(100),
     FOREIGN KEY (idPista) REFERENCES PISTAS(idPista)
 );
+CREATE TABLE RESEÑAS (
+    idReseña INT PRIMARY KEY IDENTITY(1,1),
+    idReserva INT,
+    valoracion INT,
+    titulo VARCHAR(50),
+    descripcion VARCHAR (255),
+    fecha DATE,
+    FOREIGN KEY (idReserva) REFERENCES RESERVAS(idReserva)
+)
 
 
 -- 3. Insertar datos de ejemplo (sin especificar los IDs)
@@ -103,6 +113,9 @@ VALUES ('Revisión red', 152847563, 258, 1, 'mantenimiento@club.com');
 INSERT INTO MANTENIMIENTOS (nombre, tlfn, cif, idPista, correo) 
 VALUES ('Cambio focos', 611259566, 364, 2, 'soporte@club.com');
 
+INSERT INTO RESEÑAS (idReserva, Valoracion, Titulo, Descripcion, Fecha)
+VALUES (1, 5, 'Pista de tenis', 'La pista esta bien cuidada y en muy buen estado', '2023-05-05');
+
 
 -- Verificacion
 SELECT 'USUARIOS' AS Tabla, COUNT(*) AS Registros FROM USUARIOS
@@ -113,4 +126,6 @@ SELECT 'RESERVAS', COUNT(*) FROM RESERVAS
 UNION ALL
 SELECT 'MATERIALES', COUNT(*) FROM MATERIALES
 UNION ALL
-SELECT 'MANTENIMIENTOS', COUNT(*) FROM MANTENIMIENTOS;
+SELECT 'MANTENIMIENTOS', COUNT(*) FROM MANTENIMIENTOS
+UNION ALL
+SELECT 'RESEÑAS', COUNT(*) FROM RESEÑAS;
