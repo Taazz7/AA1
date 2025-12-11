@@ -214,7 +214,20 @@ namespace AA1.Repositories
     return opiniones;
 }
 
-        
+        public async Task<int> GetTotalCountAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "SELECT COUNT(*) FROM OPINIONES";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    var result = await command.ExecuteScalarAsync();
+                    return Convert.ToInt32(result);
+                }
+            }
+        }
 
 
 

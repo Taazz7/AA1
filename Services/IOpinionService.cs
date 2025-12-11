@@ -12,6 +12,7 @@ namespace AA1.Services
         Task UpdateAsync(Opinion opinion);
         Task DeleteAsync(int id);
         Task InicializarDatosAsync();
+        Task<int> GetTotalCountAsync();
 
     }
 }

@@ -12,5 +12,6 @@ namespace AA1.Repositories
         Task UpdateAsync(Opinion opinion);
         Task DeleteAsync(int idOpinion);
         Task InicializarDatosAsync();
+        Task<int> GetTotalCountAsync();
     }
 }

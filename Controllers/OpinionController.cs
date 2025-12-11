@@ -72,6 +72,13 @@ namespace AA1.Controllers
             return Ok(opiniones);
         }
 
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetTotalOpiniones()
+        {
+            var count = await _repository.GetTotalCountAsync();
+            return Ok(new { total = count });
+        }
+
         [HttpPost]
         public async Task<ActionResult<OpinionDto>> CreateOpinion(CreateOpinionDto opinionDto)
         {

@@ -66,5 +66,10 @@ namespace AA1.Services
             return await _opinionRepository.GetAllFilteredPuntuAsync(puntuacion, orderBy, ascending);
         }
 
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _opinionRepository.GetTotalCountAsync();
+        }
+
     }
 }
